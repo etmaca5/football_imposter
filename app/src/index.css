@@ -1,0 +1,63 @@
+:root {
+  --pitch: #123524;
+  --pitch-light: #16412c;
+  --chalk: #f4f7ef;
+  --ink-muted: #8fae9b;
+  --floodlight: #f2c230;
+  --imposter: #e2493d;
+  --card-navy: #0d1b2a;
+
+  --font-display: "Anton", "Arial Narrow", sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--chalk);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      var(--pitch) 0px,
+      var(--pitch) 48px,
+      var(--pitch-light) 48px,
+      var(--pitch-light) 96px
+    );
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}

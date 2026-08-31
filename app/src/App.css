@@ -1,0 +1,347 @@
+.app-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.app-header {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px 20px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-header__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--floodlight);
+}
+
+.app-header__title {
+  font-size: clamp(28px, 8vw, 36px);
+  line-height: 1;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  padding: 16px 20px 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Buttons */
+
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  min-height: 52px;
+}
+
+.btn--primary {
+  background: var(--floodlight);
+  color: var(--card-navy);
+}
+
+.btn--primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--chalk);
+  border: 2px solid var(--ink-muted);
+}
+
+/* Setup screen */
+
+.setup-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.setup-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setup-block__title {
+  font-size: 18px;
+  color: var(--chalk);
+}
+
+.setup-block__hint {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.setup-block__hint--warn {
+  color: var(--imposter);
+}
+
+.setup-players {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setup-players__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setup-players__num {
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.setup-players__input {
+  flex: 1;
+  background: rgba(244, 247, 239, 0.06);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: 16px;
+  min-height: 48px;
+}
+
+.setup-players__input:focus {
+  outline: none;
+  border-color: var(--floodlight);
+}
+
+.setup-players__remove {
+  background: transparent;
+  border: none;
+  color: var(--ink-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.setup-stepper {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.setup-stepper__btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--floodlight);
+  background: transparent;
+  color: var(--floodlight);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.setup-stepper__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.setup-stepper__value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.setup-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setup-hints__option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: rgba(244, 247, 239, 0.04);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  color: var(--chalk);
+}
+
+.setup-hints__option.is-selected {
+  border-color: var(--floodlight);
+  background: rgba(242, 194, 48, 0.1);
+}
+
+.setup-hints__title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.setup-hints__desc {
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.setup-start {
+  margin-top: 8px;
+}
+
+/* Reveal screen — the signature flip card */
+
+.reveal-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  justify-content: center;
+}
+
+.reveal-screen__pass {
+  font-size: 20px;
+  text-align: center;
+}
+
+.reveal-screen__count {
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.reveal-screen__next {
+  width: 100%;
+}
+
+.card-scene {
+  -webkit-perspective: 1400px;
+  perspective: 1400px;
+  width: min(300px, 78vw);
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+}
+
+.card-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card-flip.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.card-face--back {
+  background: var(--card-navy);
+  border: 2px dashed var(--ink-muted);
+}
+
+.card-face__crest {
+  font-size: 40px;
+}
+
+.card-face__label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.card-face--front {
+  background: var(--card-navy);
+  border: 2px solid var(--chalk);
+  transform: rotateY(180deg);
+}
+
+.card-face--front.is-imposter {
+  border-color: var(--imposter);
+}
+
+.card-face__main {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 7vw, 32px);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.card-face--front.is-imposter .card-face__main {
+  color: var(--imposter);
+}
+
+.card-face__sub {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--floodlight);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Done screen */
+
+.done-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+}
+
+.done-screen__hint {
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.done-screen__play-again,
+.done-screen__new-setup {
+  width: 100%;
+}
