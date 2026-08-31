@@ -3,8 +3,9 @@ interface Props {
   isImposter: boolean;
   backLabel: string;
   frontMain: string;
-  frontSub?: string;
+  frontSub?: string[];
   onTap: () => void;
+  onTransitionEnd?: (e: React.TransitionEvent<HTMLDivElement>) => void;
 }
 
 export default function FlipCard({
@@ -14,6 +15,7 @@ export default function FlipCard({
   frontMain,
   frontSub,
   onTap,
+  onTransitionEnd,
 }: Props) {
   return (
     <div className="card-scene" onClick={onTap} role="button" tabIndex={0}
@@ -21,7 +23,10 @@ export default function FlipCard({
         if (e.key === "Enter" || e.key === " ") onTap();
       }}
     >
-      <div className={"card-flip" + (flipped ? " is-flipped" : "")}>
+      <div
+        className={"card-flip" + (flipped ? " is-flipped" : "")}
+        onTransitionEnd={onTransitionEnd}
+      >
         <div className="card-face card-face--back">
           <span className="card-face__crest" aria-hidden="true">
             ⚽
@@ -34,7 +39,15 @@ export default function FlipCard({
           }
         >
           <span className="card-face__main">{frontMain}</span>
-          {frontSub && <span className="card-face__sub">{frontSub}</span>}
+          {frontSub && frontSub.length > 0 && (
+            <div className="card-face__sub-list">
+              {frontSub.map((line) => (
+                <span className="card-face__sub" key={line}>
+                  {line}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

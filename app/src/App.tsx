@@ -45,8 +45,9 @@ function App() {
             onDone={() => setPhase("done")}
           />
         )}
-        {phase === "done" && (
+        {phase === "done" && round && (
           <DoneScreen
+            firstUp={round.firstUp}
             onPlayAgain={playAgain}
             onNewSetup={() => {
               setConfig(null);

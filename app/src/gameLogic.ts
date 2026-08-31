@@ -18,14 +18,40 @@ export function shuffle<T>(items: T[]): T[] {
   return arr;
 }
 
-function pickAttributeHint(footballer: Footballer): AttributeHint {
+// Major footballing nations, recognizable enough to name outright without
+// giving away the player. Anyone else is bucketed to their continent
+// instead, which stays vague (e.g. any non-top-10 South American nation
+// just reads "South America").
+const TOP_SOCCER_COUNTRIES = new Set([
+  "Brazil",
+  "Germany",
+  "Italy",
+  "Argentina",
+  "France",
+  "Uruguay",
+  "England",
+  "Spain",
+  "Netherlands",
+  "Portugal",
+]);
+
+function pickAttributeHints(
+  footballer: Footballer,
+  count: 1 | 2
+): AttributeHint[] {
+  const originHint: AttributeHint = TOP_SOCCER_COUNTRIES.has(
+    footballer.nationality
+  )
+    ? { label: "Country", value: footballer.nationality }
+    : { label: "Continent", value: footballer.continent };
+
   const candidates: AttributeHint[] = [
     { label: "Position", value: footballer.position },
-    { label: "Nationality", value: footballer.nationality },
+    originHint,
     { label: "Club", value: footballer.club },
     { label: "Era", value: footballer.era },
   ];
-  return candidates[Math.floor(Math.random() * candidates.length)];
+  return shuffle(candidates).slice(0, count);
 }
 
 export function buildRound(
@@ -43,14 +69,17 @@ export function buildRound(
     .slice(0, config.imposterCount)
     .map((p) => p.id);
 
-  const attributeHints: Record<string, AttributeHint> = {};
+  const attributeHints: Record<string, AttributeHint[]> = {};
   if (config.hintLevel === "attribute") {
     for (const id of imposterIds) {
-      attributeHints[id] = pickAttributeHint(footballer);
+      attributeHints[id] = pickAttributeHints(footballer, config.attributeHintCount);
     }
   }
 
-  return { footballer, imposterIds, attributeHints };
+  const firstUp =
+    config.players[Math.floor(Math.random() * config.players.length)];
+
+  return { footballer, imposterIds, attributeHints, firstUp };
 }
 
 export function isImposter(round: RoundState, player: Player): boolean {

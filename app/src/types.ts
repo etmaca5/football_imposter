@@ -6,6 +6,7 @@ export interface Footballer {
   initials: string;
   position: string;
   nationality: string;
+  continent: string;
   club: string;
   era: string;
 }
@@ -21,6 +22,8 @@ export interface RoundConfig {
   players: Player[];
   imposterCount: number;
   hintLevel: HintLevel;
+  /** Only used when hintLevel is "attribute". */
+  attributeHintCount: 1 | 2;
 }
 
 export interface AttributeHint {
@@ -31,5 +34,7 @@ export interface AttributeHint {
 export interface RoundState {
   footballer: Footballer;
   imposterIds: string[];
-  attributeHints: Record<string, AttributeHint>;
+  attributeHints: Record<string, AttributeHint[]>;
+  /** Randomly chosen player to start the (verbal) clue round. */
+  firstUp: Player;
 }

@@ -35,11 +35,15 @@ Sources:
   consider a remote/multiplayer mode later.
 - Host sets up a round: number of players, number of imposters, player pool
   (real footballers — need a data source/list).
+- Reveal order follows setup input order every round (consistent, not
+  shuffled) — it's just the sequence the phone gets passed around in.
 - Each player, in turn, taps to privately reveal their role/name card, then
   passes the device on.
 - Once everyone's seen their card, the app's job is done — clue-giving and
   voting happen out loud, in person, with no app involvement. The app never
-  reveals who the imposter was or who won.
+  reveals who the imposter was or who won. It does randomly pick and
+  announce who starts the clue round ("Goes first"), on the same screen as
+  "Play again."
 - Play-again (new footballer, same squad/settings) / new-setup flow.
 
 ## Imposter hint levels
@@ -49,11 +53,10 @@ one fixed rule):
 
 1. **No hint** — imposter sees only "IMPOSTER," nothing else. Hardest for
    the imposter, easiest for the crew to catch them out.
-2. **Attribute hint** — imposter sees one loose descriptor instead of the
-   name: player type/position (e.g. "striker," "winger," "keeper") or another
-   random attribute (e.g. nationality, club, era). Gives the imposter
-   something plausible to build a clue around without revealing who the
-   player is.
+2. **Attribute hint** — imposter sees one or two loose descriptors instead
+   of the name, randomly drawn from position, origin (see below), club, and
+   era (host chooses 1 or 2 at setup). Gives the imposter something
+   plausible to build a clue around without revealing who the player is.
 3. **Initials** — imposter sees the footballer's initials (e.g. "C.R.").
    Easiest for the imposter; still requires them to actually know/guess who
    it is to bluff convincingly.
@@ -62,8 +65,14 @@ Implementation notes:
 - Difficulty is a per-round setting chosen by the host during setup, not a
   per-player toggle.
 - Attribute hint needs a data model where each footballer has tagged
-  attributes (position, nationality, club, era, etc.) to draw a random one
-  from.
+  attributes (position, nationality, continent, club, era, etc.) to draw a
+  random one from.
+- **Origin hint (nationality vs. continent):** for one of the ten major
+  footballing nations (Brazil, Germany, Italy, Argentina, France, Uruguay,
+  England, Spain, Netherlands, Portugal), the country is named directly —
+  it's recognizable enough on its own. Everyone else is bucketed to their
+  continent instead (e.g. Falcao → "South America," Son → "Asia"), so a
+  less-famous nationality doesn't accidentally give the player away.
 
 ## Data source for the player pool
 
@@ -95,6 +104,9 @@ Curation approach:
   TheSportsDB, cross-check historical greats against Wikipedia
   "List of [club] players" pages and major award winners (Ballon d'Or, World
   Cup squads) to bias toward recognizability over obscurity.
+- Both nationality and a derived continent are stored per player — see the
+  origin-hint rule under Imposter hint levels above for how the attribute
+  hint picks between them.
 - Store the curated result as the static `footballers.json` shipped with the
   app (see Tech stack below) — no runtime API dependency.
 
@@ -149,9 +161,9 @@ remembered by.
   client-side.
 - **Data layer:** static `footballers.json` bundled with the app (see Data
   source above), each entry `{ id, name, initials, position, nationality,
-  club, era }`.
-- **App state:** client-side state machine — `setup → reveal → clue-order →
-  vote → result` — held in memory, reset per round. `localStorage` only for
+  continent, club, era }`.
+- **App state:** client-side state machine — `setup → reveal → done` —
+  held in memory, reset per round. `localStorage` only for
   optional settings persistence (last-used player count, etc.).
 - **Hosting:** static host (Vercel/Netlify/GitHub Pages) — no server process.
 - **Frontend framework:** React + Vite + TypeScript, scaffolded in `app/`.
@@ -160,15 +172,20 @@ remembered by.
 
 Lives in `app/` (React + Vite + TS).
 
-- `src/data/footballers.json` — 40 hand-curated footballers (current stars
-  through 1950s–60s legends), matching the schema in Tech stack above.
+- `src/data/footballers.json` — 119 hand-curated footballers: current stars
+  (2020s) and 1990s–2010s regulars make up most of the pool; pre-1990
+  careers are cut except for a short list of all-time-iconic exceptions
+  (Pelé, Cruyff, Beckenbauer, Best, Yashin, Puskás) — matching the schema
+  in Tech stack above.
 - `src/gameLogic.ts` — round setup: random footballer pick (avoids repeats
   across the last 5 rounds), random imposter assignment, random attribute
-  hint pick, clue-order shuffle.
+  hint pick(s), and a random pick for who starts the clue round.
 - `src/screens/` — `SetupScreen` (squad + imposter count + hint level) →
-  `RevealScreen` (the flip-card, one player at a time) → `DoneScreen`
-  (play again / new setup). No voting or result tracking — clue-giving and
-  voting are fully verbal/in-person, so the app never reveals who won.
+  `RevealScreen` (flip-card, one player at a time, in fixed setup order) →
+  `DoneScreen` (play again / new setup, plus a "Goes first" announcement —
+  randomly picked each round — for who starts the verbal clue round). No
+  voting or result tracking — clue-giving and voting are fully
+  verbal/in-person, so the app never reveals who won.
 - `src/components/FlipCard.tsx` — the signature reveal-card element.
 - Run locally: `cd app && npm run dev`. Build: `npm run build`.
 
@@ -180,7 +197,7 @@ Lives in `app/` (React + Vite + TS).
 - [x] Player/footballer data source identified (TheSportsDB, curated offline)
 - [x] Pick frontend framework (React + Vite + TypeScript)
 - [x] Design direction (palette/type/layout/signature element)
-- [x] Curate footballer list into footballers.json (40 players)
+- [x] Curate footballer list into footballers.json (119 players, mostly 1990s+)
 - [x] Core pass-and-play flow (setup → reveal → done, no in-app voting)
 - [ ] Polish + responsive/mobile pass (test on an actual phone)
 - [ ] Deploy to static hosting

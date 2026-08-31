@@ -10,7 +10,7 @@ const HINT_OPTIONS: { value: HintLevel; title: string; description: string }[] =
   {
     value: "attribute",
     title: "Attribute",
-    description: "Imposter sees one loose detail — position, club, nation, or era.",
+    description: "Imposter sees one or two loose details — position, club, nation, or era.",
   },
   {
     value: "initials",
@@ -44,6 +44,9 @@ export default function SetupScreen({ initialConfig, onStart }: Props) {
   const [hintLevel, setHintLevel] = useState<HintLevel>(
     initialConfig?.hintLevel ?? "none"
   );
+  const [attributeHintCount, setAttributeHintCount] = useState<1 | 2>(
+    initialConfig?.attributeHintCount ?? 1
+  );
 
   const readyPlayers = players.filter((p) => p.name.trim().length > 0);
   const maxImposters = Math.max(1, readyPlayers.length - 2);
@@ -67,6 +70,7 @@ export default function SetupScreen({ initialConfig, onStart }: Props) {
       players: readyPlayers,
       imposterCount: clampedImposterCount,
       hintLevel,
+      attributeHintCount,
     });
   }
 
@@ -145,6 +149,30 @@ export default function SetupScreen({ initialConfig, onStart }: Props) {
             </button>
           ))}
         </div>
+        {hintLevel === "attribute" && (
+          <div className="setup-attribute-count">
+            <button
+              type="button"
+              className={
+                "setup-attribute-count__option" +
+                (attributeHintCount === 1 ? " is-selected" : "")
+              }
+              onClick={() => setAttributeHintCount(1)}
+            >
+              1 attribute
+            </button>
+            <button
+              type="button"
+              className={
+                "setup-attribute-count__option" +
+                (attributeHintCount === 2 ? " is-selected" : "")
+              }
+              onClick={() => setAttributeHintCount(2)}
+            >
+              2 attributes
+            </button>
+          </div>
+        )}
       </div>
 
       <button
